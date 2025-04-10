@@ -1,31 +1,33 @@
 from flask import request, jsonify
-from flask_restful import Resource, reqparse, abort, fields, marshal_with
-
+from flask_restful import Resource, reqparse, fields, marshal_with
 from db.schema import User, db
+from werkzeug.security import generate_password_hash, check_password_hash
 
+# ✅ Request Parsers
 user_args = reqparse.RequestParser()
-user_args.add_argument('name', type=str, help='Name of the user', required=True)
-user_args.add_argument('email', type=str, help='Email of the user', required=True)
-user_args.add_argument('password', type=str, help='Password of the user', required=True)
-user_args.add_argument('phone', type=str, help='Phone number of the user', required=True)
-user_args.add_argument('address', type=str, help='Address of the user', required=False)
-user_args.add_argument('pincode', type=str, help='Pincode of the user', required=False)
-user_args.add_argument('role', type=str, help='Role of the user', required=False)
+user_args.add_argument('name', type=str, required=True, help="Name is required")
+user_args.add_argument('email', type=str, required=True, help="Email is required")
+user_args.add_argument('password', type=str, required=True, help="Password is required")
+user_args.add_argument('phone', type=str, required=True, help="Phone number is required")
+user_args.add_argument('address', type=str, required=False)
+user_args.add_argument('pincode', type=str, required=False)
+user_args.add_argument('role', type=str, required=False)
 
-email_args = reqparse.RequestParser()   
-email_args.add_argument('email', type=str, help='Email of the user', required=True)
+email_args = reqparse.RequestParser()
+email_args.add_argument('email', type=str, required=True, help="Email is required")
 
 login_args = reqparse.RequestParser()
-login_args.add_argument('email', type=str, help='Email of the user', required=True)
-login_args.add_argument('password', type=str, help='Password of the user', required=True)
+login_args.add_argument('email', type=str, required=True, help="Email is required")
+login_args.add_argument('password', type=str, required=True, help="Password is required")
 
+# ✅ Define Response Fields
 user_fields = {
     'id': fields.Integer,
     'name': fields.String,
     'email': fields.String,
     'phone': fields.String,
     'address': fields.String,
-    'pincode': fields.Integer,
+    'pincode': fields.String,
     'role': fields.String,
 }
 
@@ -35,148 +37,55 @@ login_fields = {
 }
 
 class Users(Resource):
-    def patch(self):
-        data = email_args.parse_args()
-        users = User.query.filter_by(email=data['email']).count()
-        if users > 0:
-            return {"message": "User already exists", "isNewUser": False}, 200
-        return {"message": "User doesn't exits", "isNewUser": True}, 200
-     
     @marshal_with(user_fields)
     def get(self):
-        users = User.query.all()
-        user_list = [{"id": u.id, "role": u.role, "name": u.name, "email": u.email, "phone": u.phone, "address": u.address, "pincode": u.pincode} for u in users]
-        return user_list
-    
-    @marshal_with(login_fields) 
-    def put(self):
-        data = login_args.parse_args()
-        user = User.query.filter_by(email=data['email']).first()
-        if not user:
-            return {"message": "User not found"}, 404
-        if user.password == data['password']:
-            return  {"message": "login success", "user":user}, 200
-        return {"message": "Invalid password"}, 401
+        return User.query.all(), 200  # ✅ Ensuring correct response code
 
     def post(self):
         data = user_args.parse_args()
+        if User.query.filter_by(email=data['email']).first():
+            return {"message": "User already exists"}, 400
+
+        hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
+
         new_user = User(
             name=data['name'],
             email=data['email'],
-            password=data['password'],  
+            password=hashed_password,
             phone=data['phone'],
-            address=data['address'],
-            pincode=data['pincode'],
-            role=data['role']
+            address=data.get('address', "N/A"),
+            pincode=data.get('pincode', "000000"),
+            role=data.get('role', "user")
         )
         db.session.add(new_user)
         db.session.commit()
         return {"message": "User created successfully"}, 201
 
-# ✅ Login Route (Auto-Create User if Not Found)
-# @app.route('/api/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     email = data['email']
-#     password = data['password']
+class CheckUser(Resource):
+    def post(self):
+        data = email_args.parse_args()
+        user = User.query.filter_by(email=data['email']).first()
+        return {
+            "message": "User already exists" if user else "User doesn't exist",
+            "isNewUser": not bool(user)
+        }, 200  
 
-#     user = User.query.filter_by(email=email).first()
+class Login(Resource):
+    def post(self):
+        data = login_args.parse_args()
+        user = User.query.filter_by(email=data['email']).first()
 
-#     if user:
-#         # If user exists, check password
-#         if user.password == password:
-#             return jsonify({
-#                 "message": "Login successful",
-#                 "user": {
-#                     "id": user.id,
-#                     "name": user.name,
-#                     "email": user.email,
-#                     "phone": user.phone
-#                 }
-#             }), 200
-#         else:
-#             return jsonify({"message": "Invalid password"}), 401
-#     else:
-#         # If user doesn't exist, create a new one
-#         new_user = User(
-#             name="New User",
-#             email=email,
-#             phone="Not provided",
-#             password=password  # In real apps, hash the password!
-#         )
-#         db.session.add(new_user)
-#         db.session.commit()
+        if not user:
+            return {"message": "User not found"}, 404  # ✅ Correct response code
 
-#         return jsonify({
-#             "message": "Account created successfully!",
-#             "user": {
-#                 "id": new_user.id,
-#                 "name": new_user.name,
-#                 "email": new_user.email,
-#                 "phone": new_user.phone
-#             }
-#         }), 201
-        
-
-
-# # Route to add a new user
-# @app.route('/users', methods=['POST'])
-# def add_user():
-#     data = request.get_json()
-#     if not data or not data.get('name') or not data.get('email') or not data.get('password'):
-#         return jsonify({"error": "Missing required fields"}), 400
-    
-#     new_user = User(
-#         name=data['name'],
-#         email=data['email'],
-#         password=data['password'],  # Hash passwords in real apps
-#         phone=data.get('phone'),
-#         address=data.get('address')
-#     )
-#     db.session.add(new_user)
-#     db.session.commit()
-#     return jsonify({"message": "User created successfully"}), 201
-
-# # Route to get all users
-# @app.route('/users', methods=['GET'])
-# def get_users():
-#     users = User.query.all()
-#     user_list = [{"id": u.id, "name": u.name, "email": u.email, "phone": u.phone, "address": u.address} for u in users]
-#     return jsonify(user_list)
-
-# # Route to get a single user by ID
-# @app.route('/users/<int:user_id>', methods=['GET'])
-# def get_user(user_id):
-#     user = User.query.get(user_id)
-#     if not user:
-#         return jsonify({"message": "User not found"}), 404
-#     return jsonify({"id": user.id, "name": user.name, "email": user.email, "phone": user.phone, "address": user.address})
-
-# # Route to update a user
-# @app.route('/users/<int:user_id>', methods=['PUT'])
-# def update_user(user_id):
-#     user = User.query.get(user_id)
-#     if not user:
-#         return jsonify({"message": "User not found"}), 404
-    
-#     data = request.get_json()
-#     user.name = data.get('name', user.name)
-#     user.email = data.get('email', user.email)
-#     user.password = data.get('password', user.password)  # Hash passwords in real apps
-#     user.phone = data.get('phone', user.phone)
-#     user.address = data.get('address', user.address)
-    
-#     db.session.commit()
-#     return jsonify({"message": "User updated successfully"})
-
-# # Route to delete a user
-# @app.route('/users/<int:user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     user = User.query.get(user_id)
-#     if not user:
-#         return jsonify({"message": "User not found"}), 404
-    
-#     db.session.delete(user)
-#     db.session.commit()
-#     return jsonify({"message": "User deleted successfully"})
-
+        if check_password_hash(user.password, data['password']):
+            return {
+                "message": "Login successful",
+                "user": {
+                    "id": user.id,
+                    "name": user.name,
+                    "email": user.email,
+                    "phone": user.phone
+                }
+            }, 200
+        return {"message": "Invalid password"}, 401  # ✅ Correct response code

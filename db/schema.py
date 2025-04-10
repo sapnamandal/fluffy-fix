@@ -14,17 +14,37 @@ class User(db.Model):
     phone = db.Column(db.String(15), unique=True, nullable=False)       
     address = db.Column(db.Text)
     pincode = db.Column(db.Integer)
+    # appointments = db.relationship('Appointment', backref='user', lazy=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 # Pet Model
 class Pet(db.Model):
-    __tablename__ = 'pets'
+    __tablename__ = "pets"
+
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
-    pet_name = db.Column(db.String(100), nullable=False)
-    breed = db.Column(db.String(100))
-    age = db.Column(db.Integer)
-    health_conditions = db.Column(db.Text)
+    owner_id = db.Column(db.Integer, nullable=False)
+    pet_name = db.Column(db.String(100), nullable=True)
+    breed = db.Column(db.String(100), nullable=True)
+    age = db.Column(db.Integer, nullable=True)
+    health_conditions = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    
+# Appointment Model
+class Appointment(db.Model):
+    __tablename__ = 'appointments'
+    id = db.Column(db.Integer, primary_key=True)
+    pet_id = db.Column(db.Integer, db.ForeignKey('pets.id', ondelete='CASCADE'), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    appointment_date = db.Column(db.String, nullable=False)
+    appointment_time = db.Column(db.String, nullable=False)
+    service_name = db.Column(db.String(50))
+    service_price = db.Column(db.Integer)
+    status = db.Column(db.String(20), default='Scheduled')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-    owner = db.relationship('User', backref=db.backref('pets', lazy=True))
+    # pet = db.relationship('Pet', backref=db.backref('appointments', lazy=True))
+    # owner_id = db.relationship('User', backref=db.backref('appointments', lazy=True))
+
+
+
