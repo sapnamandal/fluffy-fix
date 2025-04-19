@@ -15,7 +15,7 @@ pipeline {
             }
         }
         stage('Run Tests') {
-                echo 'Running tests...'
+                echo 'Running tests..'
                 // Add test execution commands here
             }
         }
