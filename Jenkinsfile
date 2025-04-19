@@ -1,0 +1,26 @@
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master',
+                    credentialsId: 'fluffyfixid', // The ID you set earlier
+                    url: 'https://github.com/sapnamandal/fluffy-fix.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building project...'
+                // Add build steps here
+            }
+        }
+        stage('Run Tests') {
+                echo 'Running tests...'
+                // Add test execution commands here
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                // Add deployment steps here
+            }
+        }
+    }
