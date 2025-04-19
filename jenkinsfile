@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main',
+                git branch: 'master',
                     credentialsId: 'fluffyfixid', // The ID you set earlier
                     url: 'https://github.com/sapnamandal/fluffy-fix.git'
             }
@@ -15,7 +15,6 @@ pipeline {
             }
         }
         stage('Run Tests') {
-            steps {
                 echo 'Running tests...'
                 // Add test execution commands here
             }
