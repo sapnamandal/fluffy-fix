@@ -41,10 +41,11 @@ class Appointment(db.Model):
     service_name = db.Column(db.String(50))
     service_price = db.Column(db.Integer)
     status = db.Column(db.String(20), default='Scheduled')
+    payment_status = db.Column(db.String(20), default='completed')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
 
     # pet = db.relationship('Pet', backref=db.backref('appointments', lazy=True))
     # owner_id = db.relationship('User', backref=db.backref('appointments', lazy=True))
-
 
 

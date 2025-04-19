@@ -3,7 +3,7 @@ from flask_cors import cross_origin
 from flask_restful import Resource, reqparse, fields, marshal_with
 from db.schema import db, Pet
 
-# ✅ Request Parser for Pet Data
+# Request Parser for Pet Data
 pet_args = reqparse.RequestParser()
 pet_args.add_argument('owner_id', type=int, required=True, help="Owner ID is required")
 pet_args.add_argument('pet_name', type=str, required=True, help="Pet Name is required")
@@ -11,7 +11,7 @@ pet_args.add_argument('breed', type=str, required=True)
 pet_args.add_argument('age', type=int, required=True)
 pet_args.add_argument('health_conditions', type=str, required=True)
 
-# ✅ Define Response Fields
+# Define Response Fields
 pet_fields = {
     'id': fields.Integer,
     'owner_id': fields.Integer,
