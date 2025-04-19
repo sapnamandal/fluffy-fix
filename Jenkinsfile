@@ -1,22 +1,29 @@
+pipeline {
+    agent any
+
     stages {
         stage('Checkout Code') {
             steps {
                 git branch: 'master',
-                    credentialsId: 'fluffyfixid', // The ID you set earlier
+                    credentialsId: 'fluffyfixid',
                     url: 'https://github.com/sapnamandal/fluffy-fix.git'
             }
         }
+
         stage('Build') {
             steps {
                 echo 'Building project...'
                 // Add build steps here
             }
         }
+
         stage('Run Tests') {
+            steps {
                 echo 'Running tests...'
                 // Add test execution commands here
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
@@ -24,3 +31,4 @@
             }
         }
     }
+}
