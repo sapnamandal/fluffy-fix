@@ -1,0 +1,43 @@
+services:
+ db:
+   image: postgres:13
+   environment:
+     POSTGRES_DB: petdb
+     POSTGRES_USER: myuser
+     POSTGRES_PASSWORD: mypassword
+   ports:
+     - '5432:5432'
+   volumes:
+     - postgres_data:/var/lib/postgresql/data
+   healthcheck:
+     test: ['CMD-SHELL', 'pg_isready -U myuser -d petdb']
+     interval: 10s
+     timeout: 5s
+     retries: 5
+
+
+ flask_app:
+   build:
+     context: .
+   ports:
+     - '5000:5000'
+   depends_on:
+     db:
+       condition: service_healthy
+   environment:
+     DATABASE_URL: 'postgresql://myuser:mypassword@db:5432/petdb'
+
+
+ pgadmin:
+   image: dpage/pgadmin4:6.21
+   environment:
+     PGADMIN_DEFAULT_EMAIL: 22bcaf57@kristujayanti.com
+     PGADMIN_DEFAULT_PASSWORD: ADMIN
+   ports:
+     - '5050:80'
+   depends_on:
+     - db
+
+
+volumes:
+ postgres_data:

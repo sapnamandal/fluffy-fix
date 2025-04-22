@@ -1,0 +1,193 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #FDEBD0, #FAD7A0); /* Warm beige gradient */
+}
+
+.main-container {
+    display: flex;
+    width: 80%;
+    max-width: 1000px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Left Side - Image */
+.image-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.image-container img {
+    width: 100%;
+    max-height: 75vh;  /* Reduce height to leave space */
+    object-fit: cover;
+    border-radius: 10px 0 0 10px;
+}
+
+/* Right Side - Login Form */
+.login-container {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.login-box {
+    text-align: center;
+    background: white;
+    padding: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Input Fields */
+input {
+    width: 100%; /* Ensure both email and password fields take the full width */
+    padding: 12px; /* Consistent padding for both fields */
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* General styling for input fields */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"] {
+    width: 100%; /* Make all input fields the same width */
+    max-width: 400px; /* Optional: Set a maximum width */
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    margin-bottom: 15px; /* Add spacing between fields */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-color: #3498DB; /* Blue border on focus */
+    box-shadow: 0px 0px 5px rgba(52, 152, 219, 0.5); /* Subtle glow */
+    outline: none;
+}
+
+/* Ensure email input and button have the same width */
+#email, #checkEmailBtn {
+    width: 100%; /* Match the width of the container */
+    box-sizing: border-box; /* Include padding and border in the width */
+}
+
+/* Buttons */
+button {
+    width: 100%; /* Match the width of the input fields */
+    padding: 12px;
+    background-color: #E67E22; /* Orange */
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #D35400; /* Darker orange */
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+#error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #E67E22; /* Orange */
+    margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #3498DB, #5DADE2); /* Blue gradient */
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.logout-btn {
+    background: linear-gradient(135deg, #E74C3C, #FF6F61); /* Red gradient */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #C0392B, #E74C3C); /* Darker red gradient */
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between fields */
+}
+

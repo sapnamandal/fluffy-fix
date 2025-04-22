@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FluffyFix - Pets</title>
+    <link rel="stylesheet" href="pets.css">
+</head>
+<body>
+     <!-- Header -->
+  <div class="header">
+    <h1>FluffyFix</h1>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+    <div class="container">
+        <h1>Your Pets</h1>
+        <div id="pets-list" class="pets-grid">
+            <div class="pet-card">
+                <h3>Pet Name</h3>
+                <p>Breed: Breed Name</p>
+                <p>Age: 3</p>
+                <p>Health: Healthy</p>
+                <button class="delete-pet-btn" data-id="pet-id">Delete</button>
+                <button class="book-service-btn" data-id="pet-id">Book Service</button>
+            </div>
+        </div>
+        <button id="add-pet-btn">+ Add New Pet</button>
+        
+        <!-- Hidden Pet Form -->
+        <div id="pet-form-container" class="hidden">
+            <h2>Add Your Pet</h2>
+            <input type="text" id="pet-name" placeholder="Pet Name *" required>
+            <input type="text" id="pet-breed" placeholder="Breed">
+            <input type="number" id="pet-age" placeholder="Age *" required>
+            <textarea id="pet-health" placeholder="Health Conditions"></textarea>
+            <button id="save-pet-btn">Save</button>
+        </div>
+
+        <!-- Appointments Section -->
+        <div class="appointments-container">
+          <h2>Your Appointments</h2>
+          <div id="appointments-list">
+            <!-- Appointments will be dynamically added here -->
+          </div>
+        </div>
+
+        <!-- Back Button -->
+        <button id="back-to-service-btn" class="hidden">Back to Service Page</button>
+
+        <script src="pets.js"></script>
+    </div>
+</body>
+</html>
