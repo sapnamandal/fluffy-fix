@@ -20,7 +20,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Docker Compose services...'
-                bat 'docker-compose -p resume_builder build'
+                bat 'docker-compose -p fluffy_fix build'
             }
         }
 
